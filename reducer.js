@@ -37,7 +37,7 @@ function reducer(state=initialState, action) {
                             position: (SCALES) => {
                                   return {
                                     x: (entry) => {return SCALES.xByDate(entry.date) - 5}, 
-                                    y: (entry) => {return SCALES.yByGrade(entry.rank) - 5}
+                                    y: SCALES.yStream
                                   }
                               }
                             };

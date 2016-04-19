@@ -11,7 +11,8 @@ import {getCanvasMap} from './app/canvasMap.js';
 import {reducer} from './reducer.js';
 const store = createStore(reducer);
 const app = document.getElementById('app');
-var canvasMap = getCanvasMap(app);
+
+var canvasMap = getCanvasMap(app, DATA.events.length, DATA.types.length);
 var SCALES = getScales(canvasMap, DATA);
 
 const svg = d3.select(app)

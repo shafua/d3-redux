@@ -20,6 +20,12 @@ function getScales (canvasMap, DATA) {
 
     SCALES.color = d3.scale.category20c();
 
+    SCALES.yStream = (entry, index) => {
+        var point = DATA.layers[entry.typeIndex].points[index];
+        console.log(entry.id, canvasMap.elements.barHegiht)
+        return (point.y0 + point.y/2 - 1) * canvasMap.elements.barHegiht;
+    }
+
     return SCALES;
 }
 export {getScales};

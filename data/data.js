@@ -1,4 +1,9 @@
+// d3 - global, added in html by scropt tag from cdn
 import {DATA as _D} from './fakeData.js';
+
+var stack = d3.layout.stack()
+    .offset("silhouette")
+    .values(function(layer) { return layer.points });
 
 function getData (_D) {
     let DATA = {"events": _D.sort( (a,b) => { return a.date - b.date } )}
@@ -19,6 +24,19 @@ function getData (_D) {
       curr.typeIndex = typeIndex;
       return curr;
     } );
+
+
+    DATA.layers = stack (
+    DATA.events.reduce( (layers, entry, index) => {
+      return layers.map( (layer) => {
+        if (layer.eventId===entry.eventId) layer.points.push( { x: entry.date, y: (entry.times + 1)} )
+            else layer.points.push( { x: entry.date, y: index ? layer.points[index-1].y : 0 } )
+        
+         return layer;
+       } )
+    },
+    DATA.types.map( (type) => {return {eventId: type.eventId, points: []} }  )
+  ));
 
     return DATA
 }

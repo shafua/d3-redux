@@ -1,5 +1,5 @@
-function getCanvasMap (element) {
-    return {
+function getCanvasMap (element, bricksQuantity, typesQuantity) {
+    var MAP = {
         width: 500,
         height: 500,
         padding: {
@@ -11,6 +11,12 @@ function getCanvasMap (element) {
             bottom: 25
         }
     }
+
+    MAP.elements = {
+        barHegiht: MAP.height / bricksQuantity
+    }
+
+    return MAP
 } 
 
 export {getCanvasMap};
