@@ -1,9 +1,29 @@
+// d3 - global, added in html by scropt tag from cdn
 
 import {createStore} from 'redux';
-import {reducer} from './reducer.js';
-import {ACTIONS} from './app/actions.js';
+import {DATA} from './data/data.js';
 
+import {getScales} from './app/scales.js';
+import {ACTIONS} from './app/actions.js';
+import {getCanvasMap} from './app/canvasMap.js';
+
+
+import {reducer} from './reducer.js';
 const store = createStore(reducer);
+const app = document.getElementById('app');
+var canvasMap = getCanvasMap(app);
+var SCALES = getScales(canvasMap, DATA);
+
+const svg = d3.select(app)
+            .append('svg')
+            .attr({
+                width: canvasMap.width + canvasMap.padding.horizontal,
+                height: canvasMap.height + canvasMap.padding.vertical
+            });
+const bricks = svg.selectAll('rect.brick')
+                .data(DATA.events).enter()
+                .append('rect')
+                .classed('brick', true);
 
 class Canvas {
   constructor(options) {
@@ -28,7 +48,23 @@ class Canvas {
   update() { 
     var state = store.getState();
     console.log('update',state);
-        }
+    console.log('posiitons',state.position(SCALES).x);
+
+    bricks.transition().duration(1000)
+            .attr({
+                x: state.position(SCALES).x,
+                y: state.position(SCALES).y,
+                width: 20,
+                height: 20,
+                ry: 10
+            })
+            .style({
+                fill: (d) => { return SCALES.color(d.eventId)},
+                "stroke-width": 0,
+                "stroke": 'none',
+                "stroke-opacity": 0
+            })
+  }
 
   render() {
     this.update();
