@@ -7,12 +7,14 @@ import {getScales} from './app/scales.js';
 import {ACTIONS} from './app/actions.js';
 import {getCanvasMap} from './app/canvasMap.js';
 
+import features from './graphsFeatures/features'
 
 import {reducer} from './reducer.js';
+
 const store = createStore(reducer);
 const app = document.getElementById('app');
 
-var canvasMap = getCanvasMap(app, DATA.events.length, DATA.types.length);
+var canvasMap = getCanvasMap(app);
 var SCALES = getScales(canvasMap, DATA);
 
 const svg = d3.select(app)
@@ -21,10 +23,14 @@ const svg = d3.select(app)
                 width: canvasMap.width + canvasMap.padding.horizontal,
                 height: canvasMap.height + canvasMap.padding.vertical
             });
+
+features.init(svg, SCALES, DATA, canvasMap)
 const bricks = svg.selectAll('rect.brick')
                 .data(DATA.events).enter()
                 .append('rect')
                 .classed('brick', true);
+
+
 
 class Canvas {
   constructor(options) {
@@ -55,16 +61,18 @@ class Canvas {
             .attr({
                 x: state.position(SCALES).x,
                 y: state.position(SCALES).y,
-                width: 20,
-                height: 20,
-                ry: 10
+                width: state.styles(SCALES).width,
+                height: state.styles(SCALES).height,
+                ry: state.styles(SCALES).radius
             })
             .style({
                 fill: (d) => { return SCALES.color(d.eventId)},
-                "stroke-width": 0,
-                "stroke": 'none',
-                "stroke-opacity": 0
+                "stroke-width": state.styles(SCALES).strokeWidth,
+                "stroke": state.styles(SCALES).stroke,
+                "stroke-opacity": .25
             })
+
+    features.show(state.graphType)
   }
 
   render() {

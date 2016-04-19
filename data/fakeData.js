@@ -1,7 +1,7 @@
 function makefakeData () {
     var array = [];
     var n = 50;
-    var numberOfEvents = 10;
+    var numberOfEvents = 12;
     var date = new Date;
     var nameEvent;
     while (n--) array.push({
